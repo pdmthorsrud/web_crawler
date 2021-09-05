@@ -27,19 +27,19 @@ def add_uniques_to_list(item_list: list[str], unique_list: list):
     return unique_list
 
 
-def crawl_for_regex_links(base_url: str, unique_list: list[str], regex: str) -> list[str]:
+def crawl_for_regex_matched_links(base_url: str, unique_list: list[str], regex: str) -> list[str]:
     # Getting first set of links
     content = get_content(base_url)
     no_links_before = len(unique_list)
     category_links = get_links_in_content(content, regex)
     add_uniques_to_list(category_links, unique_list)
     no_links_after = len(unique_list)
-    no_new_categories = no_links_after - no_links_before
-    print("The number of new categories is", no_new_categories)
+    no_new_links = no_links_after - no_links_before
+    print("The number of new categories is", no_new_links)
 
-    while no_new_categories != 0:
+    while no_new_links != 0:
         no_links_before = len(unique_list)
-        start_index = len(unique_list) - no_new_categories
+        start_index = len(unique_list) - no_new_links
         print("The start index is", start_index)
 
         index = start_index
@@ -49,12 +49,10 @@ def crawl_for_regex_links(base_url: str, unique_list: list[str], regex: str) -> 
             new_links = get_links_in_content(content, regex)
             add_uniques_to_list(new_links, unique_list)
             index += 1
-            if index == 2:
-                return unique_list
 
         no_links_after = len(unique_list)
-        no_new_categories = no_links_after - no_links_before
-        print("The number of new categories is ", no_new_categories)
+        no_new_links = no_links_after - no_links_before
+        print("The number of new categories is ", no_new_links)
     return unique_list
 
 def parse_product_data(html_body: str) -> None:
@@ -80,19 +78,19 @@ def main():
     category_regex = r"\/no\/categories\/\d+"
     product_regex = r"\/no\/products\/\d+"
 
-    crawl_for_regex_links(base_url, unique_categories, category_regex)
+    crawl_for_regex_matched_links(base_url, unique_categories, category_regex)
     print(unique_categories)
 
-    for link in unique_categories:
-        print("Scanning category", base_url + link)
-        content = get_content(base_url + link)
-        new_links = get_links_in_content(content, product_regex)
-        for product_link in new_links:
-            product_content = get_content(base_url + product_link)
-            parse_product_data(product_content)
-        add_uniques_to_list(new_links, unique_products)
-
-    print(unique_products)
+    # for link in unique_categories:
+    #     print("Scanning category", base_url + link)
+    #     content = get_content(base_url + link)
+    #     new_links = get_links_in_content(content, product_regex)
+    #     for product_link in new_links:
+    #         product_content = get_content(base_url + product_link)
+    #         parse_product_data(product_content)
+    #     add_uniques_to_list(new_links, unique_products)
+    #
+    # print(unique_products)
 
     # no_links_before = len(unique_products)
     # content = get_content(base_url + unique_categories[0])
