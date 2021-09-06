@@ -2,6 +2,7 @@ import asyncio
 from bs4 import BeautifulSoup
 import re
 import time
+import pandas as pd
 
 import httpx
 
@@ -12,6 +13,7 @@ product_regex = r"\/no\/products\/\d+"
 url_list = ["/"]
 crawled_urls = list()
 product_file = open("products.txt", "a")
+product_dataframe = pd.DataFrame({"Title": [], "Price": [], "Currency": []})
 
 
 # async def get_content(url: str) -> httpx.Response:
