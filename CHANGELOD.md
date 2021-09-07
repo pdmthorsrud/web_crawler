@@ -1,4 +1,4 @@
-##[UNRELEASED]
+##[0.1.0]
 
 ### Added
 - CHANGELOG.md to `/` [no issue]
