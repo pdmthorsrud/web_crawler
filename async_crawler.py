@@ -20,6 +20,7 @@ product_currency = []
 
 # Get an html_body, let program keep running while waiting
 async def get_content(url: str) -> httpx.Response.text:
+    time.sleep(0.5)
     async with httpx.AsyncClient(timeout=None) as client:
         print(f"Getting content from {url}")
         response = await client.get(url)
