@@ -1,3 +1,9 @@
+##[UNRELEASED]
+
+### Changed
+- Did some cleanup, added comments, changed function names to make more sense [no issue]
+
+
 ##[0.1.0]
 
 ### Added
