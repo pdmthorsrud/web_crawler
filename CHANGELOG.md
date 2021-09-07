@@ -1,5 +1,8 @@
 ##[UNRELEASED]
 
+### Added
+- Added support for dataframe and csv [#12](https://github.com/pdmthorsrud/web_crawler/issues/12)
+
 ### Changed
 - Did some cleanup, added comments, changed function names to make more sense [no issue]
 
