@@ -77,7 +77,6 @@ def parse_to_crawl_page(content: httpx.Response, pattern: str) -> None:
 def parse_to_store_page(content: httpx.Response) -> None:
     parsed_body = BeautifulSoup(content, "html.parser")
     meta_tags = parsed_body.find_all("meta")
-    product_file.write("\n_______________________")
     for meta_tag in meta_tags:
         meta_content = meta_tag.get("content")
         meta_property = meta_tag.get("property")
@@ -87,9 +86,6 @@ def parse_to_store_page(content: httpx.Response) -> None:
             product_amount.append(meta_content)
         elif meta_property == "product:price:currency":
             product_currency.append(meta_content)
-
-            product_file.write("\n" + meta_content)
-    product_file.write("\n_______________________\n")
 
 
 # Divides a list into `size` sized chunks
