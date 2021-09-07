@@ -2,7 +2,6 @@ import asyncio
 from bs4 import BeautifulSoup
 import re
 import time
-import pandas as pd
 
 import httpx
 
@@ -13,7 +12,6 @@ product_regex = r"\/no\/products\/\d+"
 url_list = ["/"]
 crawled_urls = list()
 product_file = open("products.txt", "a")
-product_dataframe = pd.DataFrame({"Title": [], "Price": [], "Currency": []})
 
 
 # async def get_content(url: str) -> httpx.Response:
@@ -53,7 +51,6 @@ def get_links_in_content(content: httpx.Response.text, pattern: str) -> list:
 
 
 def parse_product_data(html_body: str) -> None:
-    return
     parsed_body = BeautifulSoup(html_body, "html.parser")
     meta_tags = parsed_body.find_all("meta")
     product_file.write("\n_______________________")
