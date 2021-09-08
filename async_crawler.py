@@ -123,4 +123,9 @@ async def crawl():
     df.to_csv("products.csv")
 
 if __name__ == '__main__':
-    asyncio.run(crawl())
+    try:
+        asyncio.run(crawl())
+    except KeyboardInterrupt:
+        dataframe_data = {"Title": product_titles, "Amount": product_amount, "Currency": product_currency}
+        df = pd.DataFrame(dataframe_data)
+        df.to_csv("products.csv")
