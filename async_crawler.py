@@ -1,6 +1,7 @@
 import asyncio
 from bs4 import BeautifulSoup
 import re
+import pandas as pd
 import time
 
 import httpx
@@ -12,10 +13,14 @@ store_page_regex = r"\/no\/products\/\d+"
 to_crawl_urls = ["/"]
 crawled_urls = list()
 product_file = open("products.txt", "a")
+product_titles = []
+product_amount = []
+product_currency = []
 
 
 # Get an html_body, let program keep running while waiting
 async def get_content(url: str) -> httpx.Response.text:
+    time.sleep(0.5)
     async with httpx.AsyncClient(timeout=None) as client:
         print(f"Getting content from {url}")
         response = await client.get(url)
@@ -53,20 +58,34 @@ def parse_to_crawl_page(content: httpx.Response, pattern: str) -> None:
 
 
 # Store relevant information from the page to document
+# def parse_to_store_page(content: httpx.Response) -> None:
+#     parsed_body = BeautifulSoup(content, "html.parser")
+#     meta_tags = parsed_body.find_all("meta")
+#     product_file.write("\n_______________________")
+#     for meta_tag in meta_tags:
+#         meta_content = meta_tag.get("content")
+#         meta_property = meta_tag.get("property")
+#         if (
+#                 meta_property == "og:title"
+#                 or meta_property == "product:price:amount"
+#                 or meta_property == "product:price:currency"
+#         ):
+#             product_file.write("\n" + meta_content)
+#     product_file.write("\n_______________________\n")
+
+# Store relevant information to list that will create a dataframe in the end
 def parse_to_store_page(content: httpx.Response) -> None:
     parsed_body = BeautifulSoup(content, "html.parser")
     meta_tags = parsed_body.find_all("meta")
-    product_file.write("\n_______________________")
     for meta_tag in meta_tags:
         meta_content = meta_tag.get("content")
         meta_property = meta_tag.get("property")
-        if (
-                meta_property == "og:title"
-                or meta_property == "product:price:amount"
-                or meta_property == "product:price:currency"
-        ):
-            product_file.write("\n" + meta_content)
-    product_file.write("\n_______________________\n")
+        if meta_property == "og:title":
+            product_titles.append(meta_content)
+        elif meta_property == "product:price:amount":
+            product_amount.append(meta_content)
+        elif meta_property == "product:price:currency":
+            product_currency.append(meta_content)
 
 
 # Divides a list into `size` sized chunks
@@ -81,6 +100,8 @@ async def crawl():
         tasks = []
 
         for group in chunker(to_crawl_urls, 10):
+            # if len(crawled_urls) > 100:
+            #     break
             print("\n")
             print("___________________________________________")
             print(f"Found {len(to_crawl_urls)} links so far")
@@ -92,7 +113,14 @@ async def crawl():
             # Wait for the 10 tasks to finish before moving to next group
             await asyncio.gather(*tasks)
 
-    product_file.close()
+        # if len(crawled_urls) > 100:
+        #     break
+
+
+    # product_file.close()
+    dataframe_data = {"Title": product_titles, "Amount": product_amount, "Currency": product_currency}
+    df = pd.DataFrame(dataframe_data)
+    df.to_csv("products.csv")
 
 if __name__ == '__main__':
     asyncio.run(crawl())
