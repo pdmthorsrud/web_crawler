@@ -97,9 +97,9 @@ async def crawl():
 
     while len(to_crawl_urls) != len(crawled_urls):
 
-        tasks = []
 
         for group in chunker(to_crawl_urls, 10):
+            tasks = []
             # if len(crawled_urls) > 100:
             #     break
             print("\n")
