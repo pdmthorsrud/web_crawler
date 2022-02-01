@@ -21,3 +21,5 @@ all products found in a local file `products.txt`.
 
 ## Upcoming features
 See [all issues labeled `enhancement`](https://github.com/pdmthorsrud/web_crawler/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) for potentially new features. Leave a thumbs up on the request if it is of interest to you.
+
+this should most definitely create a merge conflict, trust me
